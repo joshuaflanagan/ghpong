@@ -32,7 +32,7 @@ end
 
 post '/label/refer/:label/:token' do
   return "UNKNOWN APP" unless authorized?
-  payload["commits"].each do |commit|
+  payload["commits"].reverse.each do |commit|
     issue = GitHub.nonclosing_issue(commit["message"])
     github.label_issue issue, params[:label] if issue
   end
@@ -41,7 +41,7 @@ end
 
 post '/label/closed/:label/:token' do
   return "UNKNOWN APP" unless authorized?
-  payload["commits"].each do |commit|
+  payload["commits"].reverse.each do |commit|
     issue = GitHub.closed_issue(commit["message"])
     github.label_issue issue, params[:label] if issue
   end
@@ -50,7 +50,7 @@ end
 
 post '/reopen/:token' do
   return "UNKNOWN APP" unless authorized?
-  payload["commits"].each do |commit|
+  payload["commits"].reverse.each do |commit|
     issue = GitHub.closed_issue(commit["message"])
     github.reopen_issue issue if issue
   end
@@ -59,7 +59,7 @@ end
 
 post '/comment/:token' do
   return "UNKNOWN APP" unless authorized?
-  payload["commits"].each do |commit|
+  payload["commits"].reverse.each do |commit|
     comment = <<<EOM
 Referenced by #{commit["id"]}
 
