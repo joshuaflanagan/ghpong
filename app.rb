@@ -30,25 +30,29 @@ get '/' do
   "GitHub Pong"
 end
 
-post '/ping/label/:label/:token' do
+post '/label/refer/:label/:token' do
   return "UNKNOWN APP" unless authorized?
   payload["commits"].each do |commit|
-    issue = GitHub.issue(commit["message"])
+    issue = GitHub.nonclosing_issue(commit["message"])
     github.label_issue issue, params[:label] if issue
   end
   "OK"
 end
 
-post '/ping/reopen/:token' do
+post '/label/closed/:label/:token' do
+  return "UNKNOWN APP" unless authorized?
+  payload["commits"].each do |commit|
+    issue = GitHub.closed_issue(commit["message"])
+    github.label_issue issue, params[:label] if issue
+  end
+  "OK"
+end
+
+post '/reopen/:token' do
   return "UNKNOWN APP" unless authorized?
   payload["commits"].each do |commit|
     issue = GitHub.closed_issue(commit["message"])
     github.reopen_issue issue if issue
   end
   "OK"
-end
-
-get '/test/:label' do
-  response = github.label_issue 4, params[:label]
-  "Added Label #{ params[:label]} returned #{response.code} #{response.body}"
 end

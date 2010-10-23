@@ -28,4 +28,13 @@ class GitHub
   def self.closed_issue(message)
     message[/(closes|fixes) (gh-|#)(\d+)/i,3]
   end
+
+  def self.nonclosing_issue(message)
+    match = message.match /(closes|fixes)? (gh-|#)(\d+)/i
+    if match && match[1].nil? && match[2] != "#"
+      match[3]
+    else
+      nil
+    end
+  end
 end
