@@ -1,14 +1,36 @@
 require 'sinatra'
 require 'net/http'
+require 'json'
+require 'commitparser'
 
 set :ghuser, ENV['GH_USER']
 set :ghpass, ENV['GH_PASSWORD']
+
+helpers do
+  def payload
+    @payload ||= JSON.parse(params[:payload])
+  end
+
+  def repo
+    @repo ||= "#{payload["repository"]["owner"]["name"]}/#{payload["repository"]["name"]}"
+  end
+end
 
 get '/' do
   "GitHub Pong"
 end
 
-get '/ping/:label' do
+post '/ping/label/:label' do
+  output = "REPO: #{repo} - #{request.ip}\n"
+  payload["commits"].each do |commit|
+    issue = CommitParser.issue(commit["message"])
+    
+    output << "issue #{issue}\n" unless issue.nil?
+  end
+  output
+end
+
+get '/test/:label' do
   server = "github.com"
   api_path = "/api/v2/yaml"
   repo = "joshuaflanagan/gitk-demo"
