@@ -11,9 +11,9 @@
     "before" => "4c8124ffcf4039d292442eeccabdeca5af5c5017",
 
     "repository" => {
-      "name"  => "grit",
-      "url"   => "http://github.com/mojombo/grit",
-      "owner" => { "name" => "mojombo", "email" => "tom@mojombo.com" }
+      "name"  => "gitk-demo",
+      "url"   => "http://github.com/joshuaflanagan/gitk-demo",
+      "owner" => { "name" => "joshuaflanagan", "email" => "joshuaflanagan@gmail.com" }
     },
 
     "commits" => [
@@ -29,7 +29,7 @@
       },
       {
         "removed"   => [],
-        "message"   => "clean up heads test. addresses gh-42",
+        "message"   => "clean up heads test. closes gh-2",
         "added"     => [],
         "timestamp" => "2007-10-10T00:18:20-07:00",
         "modified"  => ["test/test_grit.rb"],
@@ -39,7 +39,7 @@
       },
       {
         "removed"   => [],
-        "message"   => "add more comments throughout. closes GH-19",
+        "message"   => "add more comments throughout. addresses GH-4",
         "added"     => [],
         "timestamp" => "2007-10-10T00:50:39-07:00",
         "modified"  => ["lib/grit.rb", "lib/grit/commit.rb", "lib/grit/grit.rb"],

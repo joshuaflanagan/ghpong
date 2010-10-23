@@ -16,11 +16,16 @@ class GitHub
     self.class.post("/issues/label/add/#{@repo}/#{label}/#{issue}", options)
   end
 
+  def reopen_issue(issue)
+    options = @user.nil? ? {} : { :basic_auth => {:username => @user, :password => @pass}}
+    self.class.post("/issues/reopen/#{@repo}/#{issue}", options)
+  end
+
   def self.issue(message)
     message[/gh-(\d+)/i,1]
   end
 
-  def to_s
-    "#{@repo} #{@user} #{@pass}"
+  def self.closed_issue(message)
+    message[/(closes|fixes) (gh-|#)(\d+)/i,3]
   end
 end
