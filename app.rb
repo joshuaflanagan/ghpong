@@ -60,7 +60,7 @@ end
 post '/comment/:token' do
   return "UNKNOWN APP" unless authorized?
   payload["commits"].reverse.each do |commit|
-    comment = <<<EOM
+    comment = <<EOM
 Referenced by #{commit["id"]}
 
 #{commit["message"]}
