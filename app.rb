@@ -24,6 +24,14 @@ helpers do
   def authorized?
     settings.token == params[:token]
   end
+
+  def respond_to_commits
+    return "UNKNOWN APP" unless authorized?
+    payload["commits"].reverse.each do |commit|
+      yield commit
+    end
+    "OK"
+  end
 end
 
 get '/' do
@@ -31,35 +39,28 @@ get '/' do
 end
 
 post '/label/refer/:label/:token' do
-  return "UNKNOWN APP" unless authorized?
-  payload["commits"].reverse.each do |commit|
+  respond_to_commits do |commit|
     issue = GitHub.nonclosing_issue(commit["message"])
     github.label_issue issue, params[:label] if issue
   end
-  "OK"
 end
 
 post '/label/closed/:label/:token' do
-  return "UNKNOWN APP" unless authorized?
-  payload["commits"].reverse.each do |commit|
+  respond_to_commits do |commit|
     issue = GitHub.closed_issue(commit["message"])
     github.label_issue issue, params[:label] if issue
   end
-  "OK"
 end
 
 post '/reopen/:token' do
-  return "UNKNOWN APP" unless authorized?
-  payload["commits"].reverse.each do |commit|
+  respond_to_commits do |commit|
     issue = GitHub.closed_issue(commit["message"])
     github.reopen_issue issue if issue
   end
-  "OK"
 end
 
 post '/comment/:token' do
-  return "UNKNOWN APP" unless authorized?
-  payload["commits"].reverse.each do |commit|
+  respond_to_commits do |commit|
     comment = <<EOM
 Referenced by #{commit["id"]}
 
@@ -70,6 +71,5 @@ EOM
     issue = GitHub.nonclosing_issue(commit["message"])
     github.comment_issue issue, comment if issue
   end
-  "OK"
 end
 
