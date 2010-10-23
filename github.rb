@@ -21,6 +21,12 @@ class GitHub
     self.class.post("/issues/reopen/#{@repo}/#{issue}", options)
   end
 
+  def comment_issue(issue, comment)
+    options = @user.nil? ? {} : { :basic_auth => {:username => @user, :password => @pass}}
+    options[:body] = {"comment" => comment}
+    self.class.post("/issues/comment/#{@repo}/#{issue}", options)
+  end
+
   def self.issue(message)
     message[/gh-(\d+)/i,1]
   end

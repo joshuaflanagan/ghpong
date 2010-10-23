@@ -56,3 +56,20 @@ post '/reopen/:token' do
   end
   "OK"
 end
+
+post '/comment/:token' do
+  return "UNKNOWN APP" unless authorized?
+  payload["commits"].each do |commit|
+    comment = <<<EOM
+Referenced by #{commit["id"]}
+
+#{commit["message"]}
+
+_Added by ghpong_
+EOM
+    issue = GitHub.nonclosing_issue(commit["message"])
+    github.comment_issue issue, comment if issue
+  end
+  "OK"
+end
+
