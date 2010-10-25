@@ -16,4 +16,4 @@ hash = eval(payload_file.read)
 data_json = JSON.generate(hash["data"])
 payload_json = JSON.generate(hash["payload"])
 
-exec "curl --data-binary 'data=#{data_json}&payload=#{payload_json}' http://localhost:9393/ping/reopen/token"
+exec "curl --data-binary 'data=#{data_json}&payload=#{payload_json}' http://localhost:9393/label/refer/#{ARGV[0]}/token"

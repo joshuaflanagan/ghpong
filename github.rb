@@ -12,17 +12,14 @@ class GitHub
   end
 
   def label_issue(issue, label)
-    options = @user.nil? ? {} : { :basic_auth => {:username => @user, :password => @pass}}
     self.class.post("/issues/label/add/#{@repo}/#{label}/#{issue}", options)
   end
 
   def reopen_issue(issue)
-    options = @user.nil? ? {} : { :basic_auth => {:username => @user, :password => @pass}}
     self.class.post("/issues/reopen/#{@repo}/#{issue}", options)
   end
 
   def comment_issue(issue, comment)
-    options = @user.nil? ? {} : { :basic_auth => {:username => @user, :password => @pass}}
     options[:body] = {"comment" => comment}
     self.class.post("/issues/comment/#{@repo}/#{issue}", options)
   end
@@ -43,4 +40,9 @@ class GitHub
       nil
     end
   end
+
+  private
+    def options
+      @options ||= @user.nil? ? {} : { :basic_auth => {:username => @user, :password => @pass}}
+    end
 end
