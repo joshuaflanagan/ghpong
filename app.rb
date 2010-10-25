@@ -18,7 +18,7 @@ helpers do
   end
 
   def github
-    @github ||= GitHub.new(repo, settings.ghuser + "/token", settings.ghpass)
+    @github ||= GitHub.new(repo, settings.ghuser, settings.ghpass)
   end
 
   def authorized?
