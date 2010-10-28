@@ -1,11 +1,19 @@
 require 'rubygems'
 require 'httparty'
 
+module HTTParty
+  class Request
+    def path=(uri)
+      @path = URI.parse(URI.escape(uri))
+    end
+  end
+end
+
 class GitHub
   include HTTParty
   base_uri "https://github.com/api/v2/json"
 
-  def initialize(repo, user=nil pass=nil)
+  def initialize(repo, user=nil, pass=nil)
     @user = user
     @pass = pass
     @repo = repo
@@ -13,6 +21,10 @@ class GitHub
 
   def label_issue(issue, label)
     self.class.post("/issues/label/add/#{@repo}/#{label}/#{issue}", options)
+  end
+
+  def remove_issue_label(issue, label)
+    self.class.post("/issues/label/remove/#{@repo}/#{label}/#{issue}", options)
   end
 
   def reopen_issue(issue)

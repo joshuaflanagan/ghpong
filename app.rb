@@ -52,6 +52,13 @@ post '/label/closed/:label/:token' do
   end
 end
 
+post '/label/remove/closed/:label/:token' do
+  respond_to_commits do |commit|
+    issue = GitHub.closed_issue(commit["message"])
+    github.remove_issue_label issue, params[:label] if issue
+  end
+end
+
 post '/reopen/:token' do
   respond_to_commits do |commit|
     issue = GitHub.closed_issue(commit["message"])
