@@ -40,29 +40,33 @@ end
 
 post '/label/refer/:label/:token' do
   respond_to_commits do |commit|
-    issue = GitHub.nonclosing_issue(commit["message"])
-    github.label_issue issue, params[:label] if issue
+    GitHub.nonclosing_issues(commit["message"]) do |issue|
+      github.label_issue issue, params[:label]
+    end
   end
 end
 
 post '/label/closed/:label/:token' do
   respond_to_commits do |commit|
-    issue = GitHub.closed_issue(commit["message"])
-    github.label_issue issue, params[:label] if issue
+    GitHub.closed_issues(commit["message"]) do |issue|
+      github.label_issue issue, params[:label]
+    end
   end
 end
 
 post '/label/remove/closed/:label/:token' do
   respond_to_commits do |commit|
-    issue = GitHub.closed_issue(commit["message"])
-    github.remove_issue_label issue, params[:label] if issue
+    GitHub.closed_issues(commit["message"]) do |issue|
+      github.remove_issue_label issue, params[:label]
+    end
   end
 end
 
 post '/reopen/:token' do
   respond_to_commits do |commit|
-    issue = GitHub.closed_issue(commit["message"])
-    github.reopen_issue issue if issue
+    GitHub.closed_issues(commit["message"]) do |issue|
+      github.reopen_issue issue
+    end
   end
 end
 
@@ -75,8 +79,9 @@ Referenced by #{commit["id"]}
 
 _Added by ghpong_
 EOM
-    issue = GitHub.nonclosing_issue(commit["message"])
-    github.comment_issue issue, comment if issue
+    GitHub.nonclosing_issues(commit["message"]) do |issue|
+      github.comment_issue issue, comment
+    end
   end
 end
 
