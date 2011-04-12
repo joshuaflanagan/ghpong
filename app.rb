@@ -7,6 +7,7 @@ require 'github'
 set :ghuser, ENV['GH_USER']
 set :ghpass, ENV['GH_PASSWORD']
 set :token,  ENV['TOKEN']
+set :ref, ENV['REF'] || "refs/heads/master"
 
 helpers do
   def payload
@@ -27,6 +28,7 @@ helpers do
 
   def respond_to_commits
     return "UNKNOWN APP" unless authorized?
+    return "Ignoring commits to #{payload["ref"]}" unless payload["ref"] == settings.ref
     payload["commits"].reverse.each do |commit|
       yield commit
     end
